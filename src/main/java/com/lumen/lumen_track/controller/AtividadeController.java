@@ -2,6 +2,8 @@ package com.lumen.lumen_track.controller;
 
 import com.lumen.lumen_track.model.Atividade;
 import com.lumen.lumen_track.service.AtividadeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,18 +27,20 @@ public class AtividadeController {
     }
 
     @PostMapping
-    public Atividade cadastrar(@RequestBody Atividade atividade){
-        return atividadeService.cadastrar(atividade);
-    }
+    public ResponseEntity<Atividade> cadastrar(@RequestBody Atividade atividade) {
+        Atividade atividadeSalva = atividadeService.cadastrar(atividade);
 
+        return ResponseEntity.status(HttpStatus.CREATED).body(atividadeSalva);
+    }
     @PutMapping("/{id}")
     public Atividade atualizar(@PathVariable Long id, @RequestBody Atividade novosDados){
         return atividadeService.atualizar(id, novosDados);
     }
 
     @DeleteMapping("/{id}")
-    public void remover(@PathVariable Long id){
+    public ResponseEntity<Void> remover(@PathVariable Long id) {
         atividadeService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

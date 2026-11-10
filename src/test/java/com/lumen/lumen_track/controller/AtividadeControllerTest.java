@@ -97,7 +97,7 @@ class AtividadeControllerTest {
                             """))
 
                 // Assert
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.titulo")
                         .value("Estudar Spring Boot"))
                 .andExpect(jsonPath("$.descricao")
@@ -148,7 +148,7 @@ class AtividadeControllerTest {
         mockMvc.perform(delete("/atividades/1"))
 
                 // Assert
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         // Verifica se o Service foi chamado com o ID correto
         verify(atividadeService).excluir(1L);
