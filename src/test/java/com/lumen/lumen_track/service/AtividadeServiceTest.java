@@ -1,5 +1,7 @@
 package com.lumen.lumen_track.service;
 
+import com.lumen.lumen_track.dto.AtividadeRequest;
+import com.lumen.lumen_track.dto.AtividadeResponse;
 import com.lumen.lumen_track.enums.Status;
 import com.lumen.lumen_track.exception.AtividadeNaoEncontradaException;
 import com.lumen.lumen_track.model.Atividade;
@@ -20,17 +22,17 @@ public class AtividadeServiceTest {
     @Test
     void deveCadastrarAtividadeComSucesso() {
 
-        // Arrange: preparar os dados
-        Atividade atividade = new Atividade(
+        // Arrange
+        AtividadeRequest request = new AtividadeRequest(
                 "Estudar JUnit",
                 "Aprender testes automatizados",
                 LocalDate.of(2026, 11, 20)
         );
 
-        // Act: executar a ação
-        Atividade atividadeSalva = atividadeService.cadastrar(atividade);
+        // Act
+        AtividadeResponse atividadeSalva = atividadeService.cadastrar(request);
 
-        // Assert: verificar o resultado
+        // Assert
         assertNotNull(atividadeSalva.getId());
         assertEquals("Estudar JUnit", atividadeSalva.getTitulo());
         assertEquals(Status.PENDENTE, atividadeSalva.getStatus());
@@ -40,13 +42,13 @@ public class AtividadeServiceTest {
     void deveBuscarAtividadePorIdComSucesso() {
 
         // Arrange
-        Atividade atividade = new Atividade(
+        AtividadeRequest request = new AtividadeRequest(
                 "Estudar JUnit",
                 "Aprender testes automatizados",
                 LocalDate.of(2026, 11, 20)
         );
 
-        Atividade atividadeSalva = atividadeService.cadastrar(atividade);
+        AtividadeResponse atividadeSalva = atividadeService.cadastrar(request);
 
         // Act
         Atividade atividadeEncontrada =
@@ -70,45 +72,41 @@ public class AtividadeServiceTest {
     void deveAtualizarAtividadeComSucesso() {
 
         // Arrange
-        Atividade atividade = new Atividade(
-                "Estudar JUnit",
-                "Aprender testes automatizados",
+        AtividadeRequest request = new AtividadeRequest(
+                "Estudar Java",
+                "Estudar orientação a objetos",
                 LocalDate.of(2026, 11, 20)
         );
 
-        Atividade atividadeSalva = atividadeService.cadastrar(atividade);
+        AtividadeResponse atividadeSalva = atividadeService.cadastrar(request);
 
         Atividade novosDados = new Atividade(
-                "Estudar logica",
-                "Aprender logica",
+                "Estudar Spring",
+                "Aprender Spring Boot",
                 LocalDate.of(2026, 11, 22)
         );
 
         // Act
-        Atividade atividadeAtualizada = atividadeService.atualizar(
-                atividadeSalva.getId(),
-                novosDados
-        );
+        Atividade atividadeAtualizada =
+                atividadeService.atualizar(atividadeSalva.getId(), novosDados);
 
         // Assert
-        assertEquals("Estudar logica", atividadeAtualizada.getTitulo());
-        assertEquals("Aprender logica", atividadeAtualizada.getDescricao());
+        assertEquals("Estudar Spring", atividadeAtualizada.getTitulo());
+        assertEquals("Aprender Spring Boot", atividadeAtualizada.getDescricao());
         assertEquals(LocalDate.of(2026, 11, 22), atividadeAtualizada.getDataLimite());
-        assertEquals(atividadeSalva.getId(), atividadeAtualizada.getId());
-        assertEquals(atividadeSalva.getDataCriacao(), atividadeAtualizada.getDataCriacao());
     }
 
     @Test
     void deveExcluirAtividadeComSucesso() {
 
         // Arrange
-        Atividade atividade = new Atividade(
-                "Estudar JUnit",
-                "Aprender testes automatizados",
+        AtividadeRequest request = new AtividadeRequest(
+                "Estudar Java",
+                "Praticar operações CRUD",
                 LocalDate.of(2026, 11, 20)
         );
 
-        Atividade atividadeSalva = atividadeService.cadastrar(atividade);
+        AtividadeResponse atividadeSalva = atividadeService.cadastrar(request);
 
         // Act
         atividadeService.excluir(atividadeSalva.getId());

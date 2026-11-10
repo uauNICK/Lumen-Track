@@ -1,6 +1,8 @@
 
 package com.lumen.lumen_track.controller;
 
+import com.lumen.lumen_track.dto.AtividadeRequest;
+import com.lumen.lumen_track.dto.AtividadeResponse;
 import com.lumen.lumen_track.exception.AtividadeNaoEncontradaException;
 import com.lumen.lumen_track.model.Atividade;
 import com.lumen.lumen_track.service.AtividadeService;
@@ -76,14 +78,22 @@ class AtividadeControllerTest {
     void deveCadastrarAtividade() throws Exception {
 
         // Arrange
-        Atividade atividade = new Atividade(
+        AtividadeRequest request = new AtividadeRequest(
                 "Estudar Spring Boot",
                 "Aprender testes de API",
                 LocalDate.of(2026, 11, 20)
         );
 
-        when(atividadeService.cadastrar(any(Atividade.class)))
-                .thenReturn(atividade);
+        AtividadeResponse response = new AtividadeResponse(
+                new Atividade(
+                        "Estudar Spring Boot",
+                        "Aprender testes de API",
+                        LocalDate.of(2026, 11, 20)
+                )
+        );
+
+        when(atividadeService.cadastrar(any(AtividadeRequest.class)))
+                .thenReturn(response);
 
         // Act
         mockMvc.perform(post("/atividades")
@@ -179,7 +189,7 @@ class AtividadeControllerTest {
     void deveRetornar400QuandoDadosForemInvalidos() throws Exception {
 
         // Arrange
-        when(atividadeService.cadastrar(any(Atividade.class)))
+        when(atividadeService.cadastrar(any(AtividadeRequest.class)))
                 .thenThrow(new IllegalArgumentException(
                         "O título não pode ser vazio"
                 ));
@@ -198,13 +208,13 @@ class AtividadeControllerTest {
                 // Assert
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(
-                        "Titulo incorreto"
+                        "O título não pode ser vazio"
                 ));
     }
 
     @Test
     void deveRetornar400QuandoServiceRejeitarDados() throws Exception {
-        when(atividadeService.cadastrar(any(Atividade.class)))
+        when(atividadeService.cadastrar(any(AtividadeRequest.class)))
                 .thenThrow(new IllegalArgumentException(
                         "O título não pode ser vazio"
                 ));

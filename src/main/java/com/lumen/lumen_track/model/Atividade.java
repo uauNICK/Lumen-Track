@@ -2,22 +2,49 @@ package com.lumen.lumen_track.model;
 
 import com.lumen.lumen_track.enums.Status;
 import jakarta.persistence.*;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 
+@Schema(description = "Representa uma atividade cadastrada no sistema.")
 @Entity
 public class Atividade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(
+            description = "Identificador único da atividade, gerado automaticamente",
+            example = "1",
+            accessMode = Schema.AccessMode.READ_ONLY
+    )
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Schema(description = "Status atual da atividade", example = "PENDENTE")
     private Status status;
 
+    @Schema(
+            description = "Título da atividade",
+            example = "Organizar estoque"
+    )
     private String titulo;
+
+    @Schema(
+            description = "Descrição detalhada da atividade",
+            example = "Conferir e organizar os materiais do estoque"
+    )
     private String descricao;
+
+    @Schema(
+            description = "Data em que a atividade foi criada, preenchida automaticamente pelo sistema",
+            example = "2026-11-10",
+            accessMode = Schema.AccessMode.READ_ONLY
+    )
     private LocalDate dataCriacao;
+
+    @Schema(
+            description = "Data limite para conclusão da atividade",
+            example = "2026-11-20"
+    )
     private LocalDate dataLimite;
 
     public Atividade() {
