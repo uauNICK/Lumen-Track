@@ -1,6 +1,7 @@
 
 package com.lumen.lumen_track.controller;
 
+import com.lumen.lumen_track.exception.AtividadeNaoEncontradaException;
 import com.lumen.lumen_track.model.Atividade;
 import com.lumen.lumen_track.service.AtividadeService;
 import org.springframework.http.MediaType;
@@ -152,5 +153,74 @@ class AtividadeControllerTest {
         // Verifica se o Service foi chamado com o ID correto
         verify(atividadeService).excluir(1L);
     }
+
+
+    @Test
+    void deveRetornar404QuandoAtividadeNaoExistir() throws Exception {
+
+        // Arrange
+        when(atividadeService.buscarPorId(999L))
+                .thenThrow(new AtividadeNaoEncontradaException(
+                        "Atividade não encontrada"
+                ));
+
+        // Act
+        mockMvc.perform(get("/atividades/999"))
+
+                // Assert
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(
+                        "Atividade não encontrada"
+                ));
+    }
+
+
+    @Test
+    void deveRetornar400QuandoDadosForemInvalidos() throws Exception {
+
+        // Arrange
+        when(atividadeService.cadastrar(any(Atividade.class)))
+                .thenThrow(new IllegalArgumentException(
+                        "O título não pode ser vazio"
+                ));
+
+        // Act
+        mockMvc.perform(post("/atividades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                                "titulo": "",
+                                "descricao": "Descrição válida",
+                                "dataLimite": "2026-11-20"
+                            }
+                            """))
+
+                // Assert
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(
+                        "Titulo incorreto"
+                ));
+    }
+
+    @Test
+    void deveRetornar400QuandoServiceRejeitarDados() throws Exception {
+        when(atividadeService.cadastrar(any(Atividade.class)))
+                .thenThrow(new IllegalArgumentException(
+                        "O título não pode ser vazio"
+                ));
+
+        mockMvc.perform(post("/atividades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                                "titulo": "Título válido",
+                                "descricao": "Descrição válida",
+                                "dataLimite": "2026-11-20"
+                            }
+                            """))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("O título não pode ser vazio"));
+    }
+
 
 }
