@@ -1,5 +1,6 @@
 package com.lumen.lumen_track.service;
 
+import com.lumen.lumen_track.exception.AtividadeNaoEncontradaException;
 import com.lumen.lumen_track.model.Atividade;
 import com.lumen.lumen_track.repository.AtividadeRepository;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class AtividadeService {
 
     public Atividade buscarPorId(Long id){
         return atividadeRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Atividade não encontrada"));
+                new AtividadeNaoEncontradaException("Atividade não encontrada"));
     }
 
     public Atividade cadastrar(Atividade atividade){
@@ -32,7 +33,7 @@ public class AtividadeService {
 
     public Atividade atualizar(Long id, Atividade novosDados){
         Atividade atividade = atividadeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Atividade não localizada"));
+                .orElseThrow(() -> new AtividadeNaoEncontradaException("Atividade não localizada"));
 
         atividade.atualizarTitulo(novosDados.getTitulo());
         atividade.atualizarDescricao(novosDados.getDescricao());
