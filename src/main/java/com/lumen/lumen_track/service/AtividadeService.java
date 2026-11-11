@@ -20,8 +20,12 @@ public class AtividadeService {
     }
 
     //Métodos
-    public List<Atividade> listarTodas() {
-        return atividadeRepository.findAll();
+    public List<AtividadeResponse> listarTodas() {
+
+        return atividadeRepository.findAll()
+                .stream()
+                .map(AtividadeResponse::new)
+                .toList();
     }
 
     public Atividade buscarPorId(Long id){

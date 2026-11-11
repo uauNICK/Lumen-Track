@@ -38,8 +38,16 @@ class AtividadeControllerTest {
     void deveRetornarListaDeAtividades() throws Exception {
 
         // Arrange
+        Atividade atividade = new Atividade(
+                "Estudar Java",
+                "Praticar DTOs",
+                LocalDate.of(2026, 11, 20)
+        );
+
+        AtividadeResponse response = new AtividadeResponse(atividade);
+
         when(atividadeService.listarTodas())
-                .thenReturn(List.of());
+                .thenReturn(List.of(response));
 
         // Act
         mockMvc.perform(get("/atividades")
@@ -47,7 +55,9 @@ class AtividadeControllerTest {
 
                 // Assert
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(jsonPath("$[0].titulo").value("Estudar Java"))
+                .andExpect(jsonPath("$[0].descricao").value("Praticar DTOs"))
+                .andExpect(jsonPath("$[0].status").value("PENDENTE"));
     }
 
     @Test

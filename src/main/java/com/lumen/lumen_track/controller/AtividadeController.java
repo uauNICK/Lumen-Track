@@ -30,23 +30,11 @@ public class AtividadeController {
             )
     })
     @GetMapping
-    public List<Atividade> findAll() {
+    public List<AtividadeResponse> listarTodas() {
         return atividadeService.listarTodas();
     }
-
-    @Operation(summary = "Buscar atividade por ID")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Atividade encontrada"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Atividade não encontrada"
-            )
-    })
     @GetMapping("/{id}")
-    public Atividade buscarPorId(@PathVariable Long id){
+    public Atividade buscarPorId(@PathVariable Long id) {
         return atividadeService.buscarPorId(id);
     }
 
