@@ -217,9 +217,7 @@ class AtividadeControllerTest {
 
                 // Assert
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(
-                        "O título não pode ser vazio"
-                ));
+                .andExpect(content().string("O título é obrigatório"));
     }
 
     @Test
@@ -242,5 +240,35 @@ class AtividadeControllerTest {
                 .andExpect(content().string("O título não pode ser vazio"));
     }
 
+
+    @Test
+    void deveRetornar400QuandoSemDataLimite() throws Exception {
+
+        mockMvc.perform(post("/atividades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                                "titulo": "Título válido",
+                                "descricao": "Descrição válida"
+                            }
+                            """))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("A data limite é obrigatória"));
+    }
+    @Test
+    void deveRetornar400QuandoDataLimiteEstiverNoPassado() throws Exception {
+
+        mockMvc.perform(post("/atividades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                                "titulo": "Título válido",
+                                "descricao": "Descrição válida",
+                                "dataLimite": "2026-11-10"
+                            }
+                            """))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("A data limite não pode estar no passado"));
+    }
 
 }

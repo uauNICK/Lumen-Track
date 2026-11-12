@@ -1,8 +1,8 @@
 package com.lumen.lumen_track.controller;
 
+import jakarta.validation.Valid;
 import com.lumen.lumen_track.dto.AtividadeRequest;
 import com.lumen.lumen_track.dto.AtividadeResponse;
-import com.lumen.lumen_track.model.Atividade;
 import com.lumen.lumen_track.service.AtividadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,7 +51,7 @@ public class AtividadeController {
             )
     })
     @PostMapping
-    public ResponseEntity<AtividadeResponse> cadastrar(@RequestBody AtividadeRequest request) {
+    public ResponseEntity<AtividadeResponse> cadastrar(@Valid @RequestBody AtividadeRequest request) {
         AtividadeResponse atividadeSalva = atividadeService.cadastrar(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(atividadeSalva);
@@ -74,7 +74,7 @@ public class AtividadeController {
     })
 
     @PutMapping("/{id}")
-    public AtividadeResponse atualizar(@PathVariable Long id, @RequestBody AtividadeRequest request) {
+    public AtividadeResponse atualizar(@PathVariable Long id, @Valid @RequestBody AtividadeRequest request) {
         return atividadeService.atualizar(id, request);
     }
 
