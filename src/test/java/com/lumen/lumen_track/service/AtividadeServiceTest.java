@@ -51,7 +51,7 @@ public class AtividadeServiceTest {
         AtividadeResponse atividadeSalva = atividadeService.cadastrar(request);
 
         // Act
-        Atividade atividadeEncontrada =
+        AtividadeResponse atividadeEncontrada =
                 atividadeService.buscarPorId(atividadeSalva.getId());
 
         // Assert
@@ -73,21 +73,21 @@ public class AtividadeServiceTest {
 
         // Arrange
         AtividadeRequest request = new AtividadeRequest(
-                "Estudar Java",
+                "Estudar Spring",
                 "Estudar orientação a objetos",
                 LocalDate.of(2026, 11, 20)
         );
 
         AtividadeResponse atividadeSalva = atividadeService.cadastrar(request);
 
-        Atividade novosDados = new Atividade(
+        AtividadeRequest novosDados = new AtividadeRequest(
                 "Estudar Spring",
                 "Aprender Spring Boot",
                 LocalDate.of(2026, 11, 22)
         );
 
         // Act
-        Atividade atividadeAtualizada =
+        AtividadeResponse atividadeAtualizada =
                 atividadeService.atualizar(atividadeSalva.getId(), novosDados);
 
         // Assert

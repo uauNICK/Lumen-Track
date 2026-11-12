@@ -70,8 +70,9 @@ class AtividadeControllerTest {
                 LocalDate.of(2026, 11, 15)
         );
 
-        when(atividadeService.buscarPorId(1L))
-                .thenReturn(atividade);
+        AtividadeResponse response = new AtividadeResponse(atividade);
+
+        when(atividadeService.buscarPorId(1L)).thenReturn(response);
 
         // Act
         mockMvc.perform(get("/atividades/1")
@@ -131,35 +132,34 @@ class AtividadeControllerTest {
 
         // Arrange
         Atividade atividadeAtualizada = new Atividade(
-                "Estudar Java e Spring Boot",
+                "Estudar Spring",
                 "Praticar testes de API REST",
                 LocalDate.of(2026, 11, 25)
         );
 
         when(atividadeService.atualizar(
                 eq(1L),
-                any(Atividade.class)
-        )).thenReturn(atividadeAtualizada);
+                any(AtividadeRequest.class)
+        )).thenReturn(new AtividadeResponse(atividadeAtualizada));
 
         // Act
         mockMvc.perform(put("/atividades/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                                "titulo": "Estudar Java e Spring Boot",
-                                "descricao": "Praticar testes de API REST",
-                                "dataLimite": "2026-11-25"
-                            }
-                            """))
+                        {
+                            "titulo": "Estudar Spring",
+                            "descricao": "Praticar testes de API REST",
+                            "dataLimite": "2026-11-25"
+                        }
+                        """))
 
                 // Assert
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.titulo")
-                        .value("Estudar Java e Spring Boot"))
+                        .value("Estudar Spring"))
                 .andExpect(jsonPath("$.descricao")
                         .value("Praticar testes de API REST"));
     }
-
 
     @Test
     void deveExcluirAtividade() throws Exception {

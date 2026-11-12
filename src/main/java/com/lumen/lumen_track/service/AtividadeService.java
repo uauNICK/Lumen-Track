@@ -28,9 +28,15 @@ public class AtividadeService {
                 .toList();
     }
 
-    public Atividade buscarPorId(Long id){
-        return atividadeRepository.findById(id).orElseThrow(() ->
-                new AtividadeNaoEncontradaException("Atividade não encontrada"));
+    public AtividadeResponse buscarPorId(Long id) {
+        Atividade atividade = atividadeRepository.findById(id)
+                .orElseThrow(() ->
+                        new AtividadeNaoEncontradaException(
+                                "Atividade não encontrada com ID: " + id
+                        )
+                );
+
+        return new AtividadeResponse(atividade);
     }
 
     public AtividadeResponse cadastrar(AtividadeRequest request) {
@@ -40,16 +46,20 @@ public class AtividadeService {
         return new AtividadeResponse(atividadeSalva);
     }
 
-    public Atividade atualizar(Long id, Atividade novosDados){
+    public AtividadeResponse atualizar(Long id, AtividadeRequest request) {
         Atividade atividade = atividadeRepository.findById(id)
-                .orElseThrow(() -> new AtividadeNaoEncontradaException("Atividade não localizada"));
+                .orElseThrow(() ->
+                        new AtividadeNaoEncontradaException("Atividade não localizada")
+                );
 
-        atividade.atualizarTitulo(novosDados.getTitulo());
-        atividade.atualizarDescricao(novosDados.getDescricao());
-        atividade.alterarPrazo(novosDados.getDataLimite());
+        atividade.atualizarTitulo(request.getTitulo());
+        atividade.atualizarDescricao(request.getDescricao());
+        atividade.alterarPrazo(request.getDataLimite());
 
-        return atividadeRepository.save(atividade);
-        }
+        Atividade atividadeAtualizada = atividadeRepository.save(atividade);
+
+        return new AtividadeResponse(atividadeAtualizada);
+    }
 
     public void excluir(Long id) {
         buscarPorId(id);

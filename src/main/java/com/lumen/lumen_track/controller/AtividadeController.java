@@ -34,7 +34,7 @@ public class AtividadeController {
         return atividadeService.listarTodas();
     }
     @GetMapping("/{id}")
-    public Atividade buscarPorId(@PathVariable Long id) {
+    public AtividadeResponse buscarPorId(@PathVariable Long id) {
         return atividadeService.buscarPorId(id);
     }
 
@@ -72,9 +72,10 @@ public class AtividadeController {
                     description = "Atividade não encontrada"
             )
     })
+
     @PutMapping("/{id}")
-    public Atividade atualizar(@PathVariable Long id, @RequestBody Atividade novosDados){
-        return atividadeService.atualizar(id, novosDados);
+    public AtividadeResponse atualizar(@PathVariable Long id, @RequestBody AtividadeRequest request) {
+        return atividadeService.atualizar(id, request);
     }
 
     @Operation(summary = "Excluir uma atividade")
